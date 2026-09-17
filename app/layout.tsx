@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import "./premium-home.css";
 import "./premium-home-refinements.css";
+import "./deep-cinematic.css";
 
 export const metadata: Metadata = {
   applicationName: "GüvenilirMi",
