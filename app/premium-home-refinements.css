@@ -1,0 +1,168 @@
+/* V2.1 hardware and interaction refinements */
+.gm-mac {
+  transform: translateZ(0);
+}
+
+.gm-mac-screen-shell {
+  background:
+    linear-gradient(135deg, rgba(255,255,255,.34) 0, rgba(255,255,255,.035) 2.5%, transparent 7%),
+    linear-gradient(145deg, #5b615d 0%, #171a18 16%, #252a27 72%, #5d645f 100%);
+  box-shadow:
+    inset 0 1px 1px rgba(255,255,255,.34),
+    inset 0 -1px rgba(0,0,0,.92),
+    0 1px rgba(255,255,255,.08),
+    0 38px 70px rgba(0,0,0,.28);
+}
+
+.gm-mac-screen-shell::after {
+  content: "";
+  position: absolute;
+  inset: 4px;
+  pointer-events: none;
+  border-radius: 23px 23px 12px 12px;
+  border-top: 1px solid rgba(255,255,255,.08);
+  border-left: 1px solid rgba(255,255,255,.035);
+  opacity: .9;
+}
+
+.gm-mac-screen {
+  box-shadow:
+    inset 0 0 90px rgba(0,0,0,.36),
+    inset 0 1px rgba(255,255,255,.035),
+    0 0 0 1px rgba(0,0,0,.8);
+}
+
+.gm-mac-base {
+  width: 110%;
+  height: 82px;
+  margin: -1px 0 0 -5%;
+  transform-origin: top center;
+  transform: perspective(900px) rotateX(68deg);
+  clip-path: polygon(4% 0,96% 0,100% 86%,97.8% 100%,2.2% 100%,0 86%);
+  background:
+    repeating-linear-gradient(90deg, transparent 0 4.4%, rgba(20,23,21,.9) 4.5% 8.6%, transparent 8.7% 10.2%),
+    repeating-linear-gradient(0deg, transparent 0 25%, rgba(20,23,21,.9) 26% 46%, transparent 47% 51%),
+    linear-gradient(180deg,#a4aaa6 0%,#666c68 12%,#383d3a 72%,#555b57 100%);
+  background-size: 100% 60%,100% 60%,100% 100%;
+  background-position: center 9px,center 9px,center;
+  background-repeat: no-repeat;
+  box-shadow:
+    inset 0 1px rgba(255,255,255,.68),
+    inset 0 -2px rgba(0,0,0,.7),
+    0 34px 45px rgba(0,0,0,.32);
+}
+
+.gm-mac-base::before {
+  content: "";
+  position: absolute;
+  left: 38%;
+  bottom: 5px;
+  top: auto;
+  width: 24%;
+  height: 27px;
+  border: 1px solid rgba(22,26,23,.32);
+  border-radius: 5px;
+  background: linear-gradient(180deg,rgba(120,126,122,.24),rgba(70,75,72,.22));
+  box-shadow: inset 0 1px rgba(255,255,255,.08);
+}
+
+.gm-mac-base::after {
+  content: "";
+  position: absolute;
+  left: 43%;
+  top: 0;
+  width: 14%;
+  height: 4px;
+  border-radius: 0 0 8px 8px;
+  background: linear-gradient(180deg,#151817,#727873);
+}
+
+.gm-mac-shadow {
+  width: 82%;
+  height: 30px;
+  margin: -10px auto 0;
+  background: rgba(0,0,0,.64);
+  filter: blur(20px);
+}
+
+.gm-device-stage:hover .gm-mac-screen-shell {
+  box-shadow:
+    inset 0 1px 1px rgba(255,255,255,.38),
+    inset 0 -1px rgba(0,0,0,.92),
+    0 1px rgba(255,255,255,.08),
+    0 42px 78px rgba(0,0,0,.34),
+    0 0 80px rgba(83,224,128,.035);
+}
+
+.gm-device-stage:hover .gm-float-card {
+  border-color: rgba(255,255,255,.135);
+}
+
+.gm-browser-top {
+  background: linear-gradient(180deg,rgba(255,255,255,.012),transparent);
+}
+
+.gm-address {
+  box-shadow: inset 0 1px rgba(255,255,255,.025);
+}
+
+.gm-mini-signal,
+.gm-demo-signal {
+  box-shadow: inset 0 1px rgba(255,255,255,.018);
+}
+
+.gm-stage-ring {
+  animation: gm-ring-breathe 8s ease-in-out infinite;
+}
+
+@keyframes gm-ring-breathe {
+  0%,100% { opacity: .72; transform: rotateX(68deg) rotateZ(-14deg) scale(.985); }
+  50% { opacity: 1; transform: rotateX(68deg) rotateZ(-11deg) scale(1.025); }
+}
+
+.gm-engine-core::before {
+  animation: gm-orbit-ring 16s linear infinite;
+}
+
+.gm-engine-core::after {
+  animation: gm-orbit-ring-reverse 22s linear infinite;
+}
+
+@keyframes gm-orbit-ring {
+  to { transform: rotate(360deg); }
+}
+@keyframes gm-orbit-ring-reverse {
+  to { transform: rotate(-360deg); }
+}
+
+.gm-lab-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(120deg, transparent 15%, rgba(255,255,255,.028) 36%, transparent 55%);
+  transform: translateX(-110%);
+  transition: transform .7s ease;
+}
+.gm-lab-card:hover::after { transform: translateX(110%); }
+
+.gm-stat-arrow,
+.gm-navcta,
+.gm-search button {
+  transition: transform .2s ease, box-shadow .2s ease, background .2s ease;
+}
+.gm-navcta:hover,
+.gm-search button:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(0,0,0,.18); }
+.gm-stat:hover .gm-stat-arrow { transform: translate(2px,-2px); border-color: rgba(116,245,159,.18); color: #8cf6ae; }
+
+@media (max-width: 760px) {
+  .gm-mac-base { height: 58px; }
+  .gm-stage-ring { animation: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gm-stage-ring,
+  .gm-engine-core::before,
+  .gm-engine-core::after { animation: none; }
+  .gm-lab-card::after { display: none; }
+}
