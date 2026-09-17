@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import "./webgl-cinematic.css";
+import "./webgl-room.css";
 import "./webgl-stats.css";
+import "./trust-playground.css";
 
 export const metadata: Metadata = {
   applicationName: "GüvenilirMi",
