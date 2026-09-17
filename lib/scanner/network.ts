@@ -49,14 +49,16 @@ export function normalizeInputUrl(input: string): URL {
   }
 
   url.hash = "";
-  url.hostname = url.hostname.toLowerCase().replace(/\.$/, "");
+  if (!isBracketedIpLiteral(url.hostname)) {
+    url.hostname = url.hostname.toLowerCase().replace(/\.$/, "");
+  }
 
   assertHostnameAllowed(url.hostname);
   return url;
 }
 
 export function assertHostnameAllowed(hostname: string): void {
-  const host = hostname.toLowerCase().replace(/\.$/, "");
+  const host = canonicalHostname(hostname);
 
   if (!host || host === "localhost" || host === "localhost.localdomain") {
     throw new ScannerInputError("Yerel ağ hedefleri analiz edilemez.", "BLOCKED_TARGET");
@@ -78,20 +80,22 @@ export interface ResolvedTarget {
 
 export async function resolvePublicTarget(hostname: string): Promise<ResolvedTarget> {
   assertHostnameAllowed(hostname);
+  const canonical = canonicalHostname(hostname);
+  const literalFamily = net.isIP(canonical);
 
-  if (net.isIP(hostname)) {
-    if (!isPublicIp(hostname)) {
+  if (literalFamily) {
+    if (!isPublicIp(canonical)) {
       throw new ScannerInputError("Özel IP adresleri analiz edilemez.", "BLOCKED_TARGET");
     }
     return {
-      hostname,
-      addresses: [{ address: hostname, family: net.isIP(hostname) as 4 | 6 }],
+      hostname: canonical,
+      addresses: [{ address: canonical, family: literalFamily as 4 | 6 }],
     };
   }
 
-  let resolved: dns.LookupAddress[];
+  let resolved: Array<{ address: string; family: number }>;
   try {
-    resolved = await dns.lookup(hostname, { all: true, verbatim: true });
+    resolved = await dns.lookup(canonical, { all: true, verbatim: true });
   } catch {
     throw new ScannerInputError("Alan adı çözümlenemedi.", "UNRESOLVABLE_HOST");
   }
@@ -111,13 +115,14 @@ export async function resolvePublicTarget(hostname: string): Promise<ResolvedTar
     );
   }
 
-  return { hostname, addresses };
+  return { hostname: canonical, addresses };
 }
 
 export function isPublicIp(address: string): boolean {
-  const family = net.isIP(address);
-  if (family === 4) return isPublicIpv4(address);
-  if (family === 6) return isPublicIpv6(address);
+  const canonical = canonicalHostname(address);
+  const family = net.isIP(canonical);
+  if (family === 4) return isPublicIpv4(canonical);
+  if (family === 6) return isPublicIpv6(canonical);
   return false;
 }
 
@@ -159,6 +164,15 @@ function isPublicIpv6(address: string): boolean {
 }
 
 export function sameSiteHost(a: string, b: string): boolean {
-  const normalize = (host: string) => host.toLowerCase().replace(/^www\./, "").replace(/\.$/, "");
+  const normalize = (host: string) => canonicalHostname(host).replace(/^www\./, "");
   return normalize(a) === normalize(b);
+}
+
+function canonicalHostname(hostname: string): string {
+  const lower = hostname.toLowerCase().replace(/\.$/, "");
+  return isBracketedIpLiteral(lower) ? lower.slice(1, -1) : lower;
+}
+
+function isBracketedIpLiteral(hostname: string): boolean {
+  return hostname.startsWith("[") && hostname.endsWith("]");
 }
