@@ -1,5 +1,5 @@
-import { RealLaptopHome } from "@/components/real-laptop-home";
+import { HelloWorldCinematic } from "@/components/hello-world-cinematic";
 
 export default function Home() {
-  return <RealLaptopHome />;
+  return <HelloWorldCinematic />;
 }
