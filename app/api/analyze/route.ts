@@ -11,6 +11,7 @@ const CACHE_TTL_MS = 10 * 60_000;
 
 type Bucket = { count: number; resetAt: number };
 type CacheEntry = { expiresAt: number; result: AnalysisResult };
+type HeaderRecord = Record<string, string>;
 
 const globalState = globalThis as typeof globalThis & {
   __guvenilirMiRateBuckets?: Map<string, Bucket>;
@@ -116,7 +117,7 @@ function clientIdentifier(request: NextRequest): string {
   return forwarded || request.headers.get("x-real-ip") || "anonymous";
 }
 
-function responseHeaders(remaining: number): HeadersInit {
+function responseHeaders(remaining: number): HeaderRecord {
   return {
     "Cache-Control": "no-store",
     "X-RateLimit-Limit": String(MAX_REQUESTS_PER_WINDOW),
@@ -125,10 +126,10 @@ function responseHeaders(remaining: number): HeadersInit {
   };
 }
 
-function errorResponse(payload: AnalysisErrorPayload, status: number, extraHeaders?: HeadersInit) {
+function errorResponse(payload: AnalysisErrorPayload, status: number, extraHeaders: HeaderRecord = {}) {
   return NextResponse.json(payload, {
     status,
-    headers: { ...responseHeaders(0), ...(extraHeaders ?? {}) },
+    headers: { ...responseHeaders(0), ...extraHeaders },
   });
 }
 
