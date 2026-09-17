@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Analyzer } from "@/components/analyzer";
 
 export const metadata: Metadata = {
-  title: "Site Analizi | GüvenilirMi",
+  title: "Site Analizi",
   description: "Bir web sitesinin DNS, domain, TLS, yönlendirme, güvenlik başlıkları ve sayfa davranışı sinyallerini ücretsiz incele.",
   robots: {
     index: true,
