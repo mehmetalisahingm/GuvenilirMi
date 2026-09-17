@@ -4,6 +4,7 @@ import "./webgl-cinematic.css";
 import "./webgl-room.css";
 import "./webgl-stats.css";
 import "./trust-playground.css";
+import "./real-laptop.css";
 
 export const metadata: Metadata = {
   applicationName: "GüvenilirMi",
