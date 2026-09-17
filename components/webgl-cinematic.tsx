@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
+import { sourceStats } from "@/lib/stats";
 
 type Phase = {
   index: string;
@@ -77,10 +78,10 @@ const M = {
     for (let col = 0; col < 4; col++) {
       for (let row = 0; row < 4; row++) {
         out[col * 4 + row] =
-          a[0 * 4 + row] * b[col * 4 + 0] +
-          a[1 * 4 + row] * b[col * 4 + 1] +
-          a[2 * 4 + row] * b[col * 4 + 2] +
-          a[3 * 4 + row] * b[col * 4 + 3];
+          a[row] * b[col * 4] +
+          a[4 + row] * b[col * 4 + 1] +
+          a[8 + row] * b[col * 4 + 2] +
+          a[12 + row] * b[col * 4 + 3];
       }
     }
     return out;
@@ -145,28 +146,42 @@ const M = {
     let zy = eye[1] - target[1];
     let zz = eye[2] - target[2];
     let len = Math.hypot(zx, zy, zz) || 1;
-    zx /= len; zy /= len; zz /= len;
+    zx /= len;
+    zy /= len;
+    zz /= len;
 
     let xx = zz;
     let xy = 0;
     let xz = -zx;
     len = Math.hypot(xx, xy, xz) || 1;
-    xx /= len; xy /= len; xz /= len;
+    xx /= len;
+    xy /= len;
+    xz /= len;
 
     const yx = zy * xz - zz * xy;
     const yy = zz * xx - zx * xz;
     const yz = zx * xy - zy * xx;
 
     const out = M.identity();
-    out[0] = xx; out[1] = yx; out[2] = zx;
-    out[4] = xy; out[5] = yy; out[6] = zy;
-    out[8] = xz; out[9] = yz; out[10] = zz;
+    out[0] = xx;
+    out[1] = yx;
+    out[2] = zx;
+    out[4] = xy;
+    out[5] = yy;
+    out[6] = zy;
+    out[8] = xz;
+    out[9] = yz;
+    out[10] = zz;
     out[12] = -(xx * eye[0] + xy * eye[1] + xz * eye[2]);
     out[13] = -(yx * eye[0] + yy * eye[1] + yz * eye[2]);
     out[14] = -(zx * eye[0] + zy * eye[1] + zz * eye[2]);
     return out;
   },
-  model(position: [number, number, number], rotation: [number, number, number], scale: [number, number, number]): Mat4 {
+  model(
+    position: [number, number, number],
+    rotation: [number, number, number],
+    scale: [number, number, number],
+  ): Mat4 {
     let out = M.translation(...position);
     out = M.multiply(out, M.rotateX(rotation[0]));
     out = M.multiply(out, M.rotateY(rotation[1]));
@@ -225,11 +240,16 @@ const planePositions = new Float32Array([-1,-1,0, 1,-1,0, 1,1,0, -1,1,0]);
 const planeUvs = new Float32Array([0,1, 1,1, 1,0, 0,0]);
 const planeIndices = new Uint16Array([0,1,2, 0,2,3]);
 
-function uploadBuffer(gl: WebGLRenderingContext, target: number, data: BufferSource) {
+function uploadBuffer(
+  gl: WebGLRenderingContext,
+  target: number,
+  data: BufferSource,
+  usage = gl.STATIC_DRAW,
+) {
   const buffer = gl.createBuffer();
   if (!buffer) throw new Error("Buffer oluşturulamadı");
   gl.bindBuffer(target, buffer);
-  gl.bufferData(target, data, gl.STATIC_DRAW);
+  gl.bufferData(target, data, usage);
   return buffer;
 }
 
@@ -250,9 +270,18 @@ function drawScreenTexture(canvas: HTMLCanvasElement, phase: number, time: numbe
 
   ctx.fillStyle = "rgba(255,255,255,.055)";
   ctx.fillRect(0, 0, w, 54);
-  ctx.fillStyle = "#ff5f57"; ctx.beginPath(); ctx.arc(24, 27, 7, 0, Math.PI * 2); ctx.fill();
-  ctx.fillStyle = "#febc2e"; ctx.beginPath(); ctx.arc(47, 27, 7, 0, Math.PI * 2); ctx.fill();
-  ctx.fillStyle = "#28c840"; ctx.beginPath(); ctx.arc(70, 27, 7, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = "#ff5f57";
+  ctx.beginPath();
+  ctx.arc(24, 27, 7, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.fillStyle = "#febc2e";
+  ctx.beginPath();
+  ctx.arc(47, 27, 7, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.fillStyle = "#28c840";
+  ctx.beginPath();
+  ctx.arc(70, 27, 7, 0, Math.PI * 2);
+  ctx.fill();
 
   ctx.fillStyle = "rgba(255,255,255,.08)";
   ctx.roundRect(110, 13, w - 150, 28, 14);
@@ -263,8 +292,18 @@ function drawScreenTexture(canvas: HTMLCanvasElement, phase: number, time: numbe
 
   ctx.strokeStyle = "rgba(255,255,255,.05)";
   ctx.lineWidth = 1;
-  for (let x = 0; x < w; x += 44) { ctx.beginPath(); ctx.moveTo(x, 54); ctx.lineTo(x, h); ctx.stroke(); }
-  for (let y = 54; y < h; y += 44) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke(); }
+  for (let x = 0; x < w; x += 44) {
+    ctx.beginPath();
+    ctx.moveTo(x, 54);
+    ctx.lineTo(x, h);
+    ctx.stroke();
+  }
+  for (let y = 54; y < h; y += 44) {
+    ctx.beginPath();
+    ctx.moveTo(0, y);
+    ctx.lineTo(w, y);
+    ctx.stroke();
+  }
 
   const pulse = 0.45 + Math.sin(time * 0.002) * 0.1;
   const halo = ctx.createRadialGradient(w * .5, h * .48, 20, w * .5, h * .48, 280);
@@ -287,6 +326,7 @@ function drawScreenTexture(canvas: HTMLCanvasElement, phase: number, time: numbe
   const items = red
     ? [["DOMAIN", "7 gün", "−18"], ["FORM", "Harici hedef", "−22"], ["REDIRECT", "3 domain", "−11"]]
     : [["TLS", "Doğrulandı", "+8"], ["HEADERS", "Güçlü", "+7"], ["REDIRECT", "Temiz", "+5"]];
+
   items.forEach((item, i) => {
     const y = 385 + i * 62;
     ctx.fillStyle = "rgba(255,255,255,.045)";
@@ -307,8 +347,8 @@ function drawScreenTexture(canvas: HTMLCanvasElement, phase: number, time: numbe
 export function WebGLCinematic() {
   const rootRef = useRef<HTMLElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const progressRef = useRef<HTMLElement>(null);
   const [phase, setPhase] = useState(0);
-  const [progress, setProgress] = useState(0);
   const [url, setUrl] = useState("");
 
   const current = phases[phase];
@@ -316,16 +356,22 @@ export function WebGLCinematic() {
 
   useEffect(() => {
     let frame = 0;
+    let lastPhase = -1;
     const update = () => {
       const root = rootRef.current;
       if (root) {
         const rect = root.getBoundingClientRect();
         const travel = Math.max(1, root.offsetHeight - window.innerHeight);
         const p = clamp(-rect.top / travel);
-        setProgress(p);
+        if (progressRef.current) progressRef.current.style.transform = `scaleX(${p})`;
         let next = 0;
-        for (let i = 0; i < phaseStops.length; i++) if (p >= phaseStops[i]) next = i;
-        setPhase(next);
+        for (let i = 0; i < phaseStops.length; i++) {
+          if (p >= phaseStops[i]) next = i;
+        }
+        if (next !== lastPhase) {
+          lastPhase = next;
+          setPhase(next);
+        }
       }
       frame = requestAnimationFrame(update);
     };
@@ -336,20 +382,40 @@ export function WebGLCinematic() {
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const gl = canvas.getContext("webgl", { antialias: true, alpha: true, premultipliedAlpha: false });
+    const gl = canvas.getContext("webgl", {
+      antialias: true,
+      alpha: true,
+      premultipliedAlpha: false,
+      powerPreference: "high-performance",
+    });
     if (!gl) return;
 
-    const colorProgram = makeProgram(gl,
-      `attribute vec3 a_position; attribute vec3 a_normal; uniform mat4 u_mvp; uniform mat4 u_model; varying vec3 v_normal; varying vec3 v_world; void main(){ vec4 world=u_model*vec4(a_position,1.0); v_world=world.xyz; v_normal=mat3(u_model)*a_normal; gl_Position=u_mvp*vec4(a_position,1.0); }`,
-      `precision mediump float; varying vec3 v_normal; varying vec3 v_world; uniform vec3 u_color; uniform float u_alpha; uniform float u_emissive; void main(){ vec3 n=normalize(v_normal); vec3 l=normalize(vec3(-0.45,0.8,0.65)); float d=max(dot(n,l),0.0); float rim=pow(1.0-max(abs(n.z),0.0),2.2); vec3 c=u_color*(0.28+d*0.72)+u_color*rim*0.32+u_color*u_emissive; gl_FragColor=vec4(c,u_alpha); }`
+    const pointer = { x: 0, y: 0 };
+    const onPointerMove = (event: PointerEvent) => {
+      pointer.x = (event.clientX / Math.max(1, window.innerWidth) - .5) * 2;
+      pointer.y = (event.clientY / Math.max(1, window.innerHeight) - .5) * 2;
+    };
+    window.addEventListener("pointermove", onPointerMove, { passive: true });
+
+    const colorProgram = makeProgram(
+      gl,
+      `attribute vec3 a_position; attribute vec3 a_normal; uniform mat4 u_mvp; uniform mat4 u_model; varying vec3 v_normal; void main(){ v_normal=mat3(u_model)*a_normal; gl_Position=u_mvp*vec4(a_position,1.0); }`,
+      `precision mediump float; varying vec3 v_normal; uniform vec3 u_color; uniform float u_alpha; uniform float u_emissive; void main(){ vec3 n=normalize(v_normal); vec3 l=normalize(vec3(-0.45,0.8,0.65)); float d=max(dot(n,l),0.0); float rim=pow(1.0-max(abs(n.z),0.0),2.2); vec3 c=u_color*(0.24+d*0.78)+u_color*rim*0.4+u_color*u_emissive; gl_FragColor=vec4(c,u_alpha); }`,
     );
-    const textureProgram = makeProgram(gl,
+    const textureProgram = makeProgram(
+      gl,
       `attribute vec3 a_position; attribute vec2 a_uv; uniform mat4 u_mvp; varying vec2 v_uv; void main(){v_uv=a_uv;gl_Position=u_mvp*vec4(a_position,1.0);}`,
-      `precision mediump float; varying vec2 v_uv; uniform sampler2D u_tex; uniform float u_alpha; void main(){ vec4 c=texture2D(u_tex,v_uv); gl_FragColor=vec4(c.rgb,c.a*u_alpha); }`
+      `precision mediump float; varying vec2 v_uv; uniform sampler2D u_tex; uniform float u_alpha; void main(){ vec4 c=texture2D(u_tex,v_uv); gl_FragColor=vec4(c.rgb,c.a*u_alpha); }`,
     );
-    const basicProgram = makeProgram(gl,
+    const pointProgram = makeProgram(
+      gl,
       `attribute vec3 a_position; uniform mat4 u_mvp; uniform float u_size; void main(){ gl_Position=u_mvp*vec4(a_position,1.0); gl_PointSize=u_size; }`,
-      `precision mediump float; uniform vec3 u_color; uniform float u_alpha; void main(){ float d=distance(gl_PointCoord,vec2(.5)); if(d>.5) discard; float a=smoothstep(.5,.06,d)*u_alpha; gl_FragColor=vec4(u_color,a); }`
+      `precision mediump float; uniform vec3 u_color; uniform float u_alpha; void main(){ float d=distance(gl_PointCoord,vec2(.5)); if(d>.5) discard; float a=smoothstep(.5,.05,d)*u_alpha; gl_FragColor=vec4(u_color,a); }`,
+    );
+    const lineProgram = makeProgram(
+      gl,
+      `attribute vec3 a_position; uniform mat4 u_mvp; void main(){ gl_Position=u_mvp*vec4(a_position,1.0); }`,
+      `precision mediump float; uniform vec3 u_color; uniform float u_alpha; void main(){ gl_FragColor=vec4(u_color,u_alpha); }`,
     );
 
     const boxPos = uploadBuffer(gl, gl.ARRAY_BUFFER, boxPositions);
@@ -359,14 +425,14 @@ export function WebGLCinematic() {
     const planeUv = uploadBuffer(gl, gl.ARRAY_BUFFER, planeUvs);
     const planeIdx = uploadBuffer(gl, gl.ELEMENT_ARRAY_BUFFER, planeIndices);
 
-    const particleCount = 520;
+    const particleCount = 620;
     const particleData = new Float32Array(particleCount * 3);
     for (let i = 0; i < particleCount; i++) {
-      const r = 2.4 + Math.random() * 8;
+      const r = 2.2 + Math.random() * 8.4;
       const a = Math.random() * Math.PI * 2;
       particleData[i * 3] = Math.cos(a) * r;
-      particleData[i * 3 + 1] = (Math.random() - .5) * 7;
-      particleData[i * 3 + 2] = -Math.random() * 30 + 4;
+      particleData[i * 3 + 1] = (Math.random() - .5) * 7.5;
+      particleData[i * 3 + 2] = -Math.random() * 34 + 4;
     }
     const particleBuffer = uploadBuffer(gl, gl.ARRAY_BUFFER, particleData);
 
@@ -378,6 +444,7 @@ export function WebGLCinematic() {
       circleData[i * 3 + 2] = 0;
     }
     const circleBuffer = uploadBuffer(gl, gl.ARRAY_BUFFER, circleData);
+    const lineBuffer = uploadBuffer(gl, gl.ARRAY_BUFFER, new Float32Array(26 * 6), gl.DYNAMIC_DRAW);
 
     const screenCanvas = document.createElement("canvas");
     screenCanvas.width = 1024;
@@ -407,13 +474,26 @@ export function WebGLCinematic() {
     const texMvpLoc = gl.getUniformLocation(textureProgram, "u_mvp");
     const texAlphaLoc = gl.getUniformLocation(textureProgram, "u_alpha");
 
-    const basicPosLoc = gl.getAttribLocation(basicProgram, "a_position");
-    const basicMvpLoc = gl.getUniformLocation(basicProgram, "u_mvp");
-    const basicColorLoc = gl.getUniformLocation(basicProgram, "u_color");
-    const basicAlphaLoc = gl.getUniformLocation(basicProgram, "u_alpha");
-    const basicSizeLoc = gl.getUniformLocation(basicProgram, "u_size");
+    const pointPosLoc = gl.getAttribLocation(pointProgram, "a_position");
+    const pointMvpLoc = gl.getUniformLocation(pointProgram, "u_mvp");
+    const pointColorLoc = gl.getUniformLocation(pointProgram, "u_color");
+    const pointAlphaLoc = gl.getUniformLocation(pointProgram, "u_alpha");
+    const pointSizeLoc = gl.getUniformLocation(pointProgram, "u_size");
 
-    const drawBox = (vp: Mat4, position: [number, number, number], rotation: [number, number, number], scale: [number, number, number], color: [number, number, number], alpha = 1, emissive = 0) => {
+    const linePosLoc = gl.getAttribLocation(lineProgram, "a_position");
+    const lineMvpLoc = gl.getUniformLocation(lineProgram, "u_mvp");
+    const lineColorLoc = gl.getUniformLocation(lineProgram, "u_color");
+    const lineAlphaLoc = gl.getUniformLocation(lineProgram, "u_alpha");
+
+    const drawBox = (
+      vp: Mat4,
+      position: [number, number, number],
+      rotation: [number, number, number],
+      scale: [number, number, number],
+      color: [number, number, number],
+      alpha = 1,
+      emissive = 0,
+    ) => {
       const model = M.model(position, rotation, scale);
       const mvp = M.multiply(vp, model);
       gl.useProgram(colorProgram);
@@ -432,7 +512,13 @@ export function WebGLCinematic() {
       gl.drawElements(gl.TRIANGLES, boxIndices.length, gl.UNSIGNED_SHORT, 0);
     };
 
-    const drawTexturedPlane = (vp: Mat4, position: [number, number, number], rotation: [number, number, number], scale: [number, number, number], alpha: number) => {
+    const drawTexturedPlane = (
+      vp: Mat4,
+      position: [number, number, number],
+      rotation: [number, number, number],
+      scale: [number, number, number],
+      alpha: number,
+    ) => {
       const model = M.model(position, rotation, scale);
       const mvp = M.multiply(vp, model);
       gl.useProgram(textureProgram);
@@ -451,28 +537,50 @@ export function WebGLCinematic() {
     };
 
     const drawPoints = (vp: Mat4, alpha: number, red: boolean) => {
-      gl.useProgram(basicProgram);
+      gl.useProgram(pointProgram);
       gl.bindBuffer(gl.ARRAY_BUFFER, particleBuffer);
-      gl.enableVertexAttribArray(basicPosLoc);
-      gl.vertexAttribPointer(basicPosLoc, 3, gl.FLOAT, false, 0, 0);
-      gl.uniformMatrix4fv(basicMvpLoc, false, vp);
-      gl.uniform3fv(basicColorLoc, red ? [1,.24,.3] : [.3,1,.62]);
-      gl.uniform1f(basicAlphaLoc, alpha);
-      gl.uniform1f(basicSizeLoc, 3.2 * Math.min(2, window.devicePixelRatio || 1));
+      gl.enableVertexAttribArray(pointPosLoc);
+      gl.vertexAttribPointer(pointPosLoc, 3, gl.FLOAT, false, 0, 0);
+      gl.uniformMatrix4fv(pointMvpLoc, false, vp);
+      gl.uniform3fv(pointColorLoc, red ? [1,.24,.3] : [.3,1,.62]);
+      gl.uniform1f(pointAlphaLoc, alpha);
+      gl.uniform1f(pointSizeLoc, 3.3 * Math.min(2, window.devicePixelRatio || 1));
       gl.drawArrays(gl.POINTS, 0, particleCount);
     };
 
-    const drawRing = (vp: Mat4, rotation: [number, number, number], scale: number, color: [number, number, number], alpha: number) => {
+    const drawLines = (
+      vp: Mat4,
+      data: Float32Array,
+      color: [number, number, number],
+      alpha: number,
+    ) => {
+      gl.useProgram(lineProgram);
+      gl.bindBuffer(gl.ARRAY_BUFFER, lineBuffer);
+      gl.bufferData(gl.ARRAY_BUFFER, data, gl.DYNAMIC_DRAW);
+      gl.enableVertexAttribArray(linePosLoc);
+      gl.vertexAttribPointer(linePosLoc, 3, gl.FLOAT, false, 0, 0);
+      gl.uniformMatrix4fv(lineMvpLoc, false, vp);
+      gl.uniform3fv(lineColorLoc, color);
+      gl.uniform1f(lineAlphaLoc, alpha);
+      gl.drawArrays(gl.LINES, 0, data.length / 3);
+    };
+
+    const drawRing = (
+      vp: Mat4,
+      rotation: [number, number, number],
+      scale: number,
+      color: [number, number, number],
+      alpha: number,
+    ) => {
       const model = M.model([0,0,-8], rotation, [scale,scale,scale]);
       const mvp = M.multiply(vp, model);
-      gl.useProgram(basicProgram);
+      gl.useProgram(lineProgram);
       gl.bindBuffer(gl.ARRAY_BUFFER, circleBuffer);
-      gl.enableVertexAttribArray(basicPosLoc);
-      gl.vertexAttribPointer(basicPosLoc, 3, gl.FLOAT, false, 0, 0);
-      gl.uniformMatrix4fv(basicMvpLoc, false, mvp);
-      gl.uniform3fv(basicColorLoc, color);
-      gl.uniform1f(basicAlphaLoc, alpha);
-      gl.uniform1f(basicSizeLoc, 1);
+      gl.enableVertexAttribArray(linePosLoc);
+      gl.vertexAttribPointer(linePosLoc, 3, gl.FLOAT, false, 0, 0);
+      gl.uniformMatrix4fv(lineMvpLoc, false, mvp);
+      gl.uniform3fv(lineColorLoc, color);
+      gl.uniform1f(lineAlphaLoc, alpha);
       gl.drawArrays(gl.LINE_LOOP, 0, 128);
     };
 
@@ -495,41 +603,53 @@ export function WebGLCinematic() {
       gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
       const root = rootRef.current;
-      const rectRoot = root?.getBoundingClientRect();
+      const rootRect = root?.getBoundingClientRect();
       const travel = root ? Math.max(1, root.offsetHeight - window.innerHeight) : 1;
-      const p = root && rectRoot ? clamp(-rectRoot.top / travel) : 0;
+      const p = root && rootRect ? clamp(-rootRect.top / travel) : 0;
       const aspect = width / height;
       const proj = M.perspective((42 * Math.PI) / 180, aspect, .05, 80);
 
-      let eye: [number, number, number] = [0, .15, 7];
-      let target: [number, number, number] = [0, -.05, -.25];
+      let eye: [number, number, number];
+      let target: [number, number, number];
       if (p < .32) {
-        const z = 7 - smoothstep(0, .32, p) * 6.15;
-        eye = [Math.sin(p * 5) * .14, .15 - p * .2, z];
-        target = [0, -.05, -.45];
+        const zoom = smoothstep(0, .32, p);
+        const z = 7.4 - zoom * 6.5;
+        eye = [pointer.x * .18 * (1 - zoom), .16 - pointer.y * .1 * (1 - zoom), z];
+        target = [pointer.x * .04, -.04 - pointer.y * .025, -.45];
       } else {
         const t = (p - .32) / .68;
-        eye = [Math.sin(t * 3.2) * .22, Math.sin(t * 2) * .12, .85 - t * 22];
-        target = [0, 0, eye[2] - 3.5];
+        eye = [Math.sin(t * 3.2) * .22 + pointer.x * .08, Math.sin(t * 2) * .12 - pointer.y * .05, .9 - t * 22];
+        target = [pointer.x * .04, -pointer.y * .03, eye[2] - 3.5];
       }
       const vp = M.multiply(proj, M.lookAt(eye, target));
+
+      const texturePhase = p < .48 ? 1 : p < .7 ? 3 : 4;
+      drawScreenTexture(screenCanvas, texturePhase, time);
+      gl.bindTexture(gl.TEXTURE_2D, screenTexture);
+      gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 0);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, screenCanvas);
 
       const laptopAlpha = 1 - smoothstep(.27, .37, p);
       const tilt = -.055 + Math.sin(time * .00035) * .008;
       if (laptopAlpha > .01) {
-        drawBox(vp, [0,-1.18,.78], [0,0,0], [2.72,.105,1.72], [.47,.5,.49], laptopAlpha);
-        drawBox(vp, [0,-1.035,.62], [0,0,0], [2.55,.028,1.48], [.085,.1,.092], laptopAlpha);
-        drawBox(vp, [0,-1.0,.95], [0,0,0], [.78,.014,.5], [.26,.29,.28], laptopAlpha);
-        drawBox(vp, [0,-.94,-.55], [0,0,0], [2.1,.055,.12], [.18,.2,.19], laptopAlpha);
-        drawBox(vp, [0,.38,-.72], [tilt,0,0], [2.72,1.72,.075], [.13,.15,.145], laptopAlpha);
-        drawBox(vp, [0,.38,-.625], [tilt,0,0], [2.49,1.47,.015], [.018,.03,.024], laptopAlpha, .08);
-        drawTexturedPlane(vp, [0,.38,-.598], [tilt,0,0], [2.44,1.42,1], laptopAlpha);
+        drawBox(vp, [0,-1.235,.79], [0,0,0], [2.78,.075,1.77], [.30,.325,.315], laptopAlpha);
+        drawBox(vp, [0,-1.145,.76], [0,0,0], [2.72,.035,1.7], [.58,.605,.595], laptopAlpha);
+        drawBox(vp, [0,-1.06,.62], [0,0,0], [2.55,.025,1.47], [.075,.09,.083], laptopAlpha);
+        drawBox(vp, [0,-1.025,.98], [0,0,0], [.8,.012,.52], [.23,.25,.245], laptopAlpha);
+        drawBox(vp, [0,-.97,-.56], [0,0,0], [2.16,.052,.12], [.14,.16,.15], laptopAlpha);
+        drawBox(vp, [-2.7,-1.17,.78], [0,0,0], [.035,.06,1.68], [.68,.7,.69], laptopAlpha * .7);
+        drawBox(vp, [2.7,-1.17,.78], [0,0,0], [.035,.06,1.68], [.68,.7,.69], laptopAlpha * .7);
+
+        drawBox(vp, [0,.39,-.73], [tilt,0,0], [2.76,1.75,.085], [.095,.112,.104], laptopAlpha);
+        drawBox(vp, [0,.39,-.628], [tilt,0,0], [2.52,1.49,.014], [.012,.025,.018], laptopAlpha, .1);
+        drawTexturedPlane(vp, [0,.39,-.6], [tilt,0,0], [2.46,1.43,1], laptopAlpha);
 
         for (let row = 0; row < 5; row++) {
           for (let col = 0; col < 12; col++) {
             const x = -1.78 + col * .325;
-            const z = -.2 + row * .29;
-            drawBox(vp, [x,-.985,z], [0,0,0], [.12,.018,.09], [.12,.135,.128], laptopAlpha * .88);
+            const z = -.22 + row * .29;
+            const glow = ((row * 12 + col) % 7 === 0) ? .09 : .02;
+            drawBox(vp, [x,-1.005,z], [0,0,0], [.12,.017,.088], [.11,.125,.117], laptopAlpha * .9, glow);
           }
         }
       }
@@ -537,35 +657,60 @@ export function WebGLCinematic() {
       const virtualAlpha = smoothstep(.30, .42, p);
       const red = p > .55 && p < .82;
       if (virtualAlpha > .01) {
-        drawPoints(vp, Math.min(.82, virtualAlpha), red);
+        drawPoints(vp, Math.min(.78, virtualAlpha), red);
         const travelZ = p > .32 ? ((p - .32) / .68) * 22 : 0;
+        const nodes: Array<[number, number, number]> = [];
         for (let i = 0; i < 26; i++) {
           const z = 1.5 - i * 1.15 - travelZ * .55;
           const x = Math.sin(i * 1.7 + time * .00035) * (1.1 + (i % 5) * .32);
           const y = Math.cos(i * 1.31 + time * .00024) * (0.6 + (i % 4) * .25);
-          const danger = red && i % 4 === 0;
-          drawBox(vp, [x,y,z], [time*.00018 + i, time*.00011, 0], [.055,.055,.055], danger ? [1,.18,.24] : [.24,1,.58], virtualAlpha * .9, .65);
+          nodes.push([x,y,z]);
         }
+        const lineData = new Float32Array((nodes.length - 1) * 6);
+        for (let i = 1; i < nodes.length; i++) {
+          const offset = (i - 1) * 6;
+          const from = nodes[i - 1];
+          const to = nodes[i];
+          lineData[offset] = from[0];
+          lineData[offset + 1] = from[1];
+          lineData[offset + 2] = from[2];
+          lineData[offset + 3] = to[0];
+          lineData[offset + 4] = to[1];
+          lineData[offset + 5] = to[2];
+        }
+        drawLines(vp, lineData, red ? [1,.24,.31] : [.25,1,.58], virtualAlpha * (red ? .34 : .22));
+        nodes.forEach((node, i) => {
+          const danger = red && (i % 4 === 0 || i % 7 === 0);
+          const s = danger ? .082 : .052;
+          drawBox(
+            vp,
+            node,
+            [time * .00018 + i, time * .00011, 0],
+            [s,s,s],
+            danger ? [1,.17,.23] : [.23,1,.56],
+            virtualAlpha * .95,
+            danger ? .85 : .55,
+          );
+        });
       }
 
       if (p > .7) {
-        const a = smoothstep(.7,.8,p) * (1 - smoothstep(.91,1,p));
+        const a = smoothstep(.7,.8,p) * (1 - smoothstep(.94,1,p));
         drawRing(vp, [0,time*.00018,0], 1.8, [1,.75,.28], a);
         drawRing(vp, [1.15,time*.00013,.35], 2.35, [.28,1,.58], a*.72);
         drawRing(vp, [.35,time*.0001,1.3], 2.9, [1,.26,.32], a*.42);
         drawBox(vp, [0,0,-8], [time*.00024,time*.00018,0], [.55,.55,.55], [1,.68,.22], a, .9);
+        drawBox(vp, [0,0,-8], [-time*.00019,time*.00024,.4], [.8,.035,.8], [.28,1,.58], a*.5, .55);
       }
-
-      drawScreenTexture(screenCanvas, p < .48 ? 1 : p < .7 ? 3 : 4, time);
-      gl.bindTexture(gl.TEXTURE_2D, screenTexture);
-      gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 0);
-      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, screenCanvas);
 
       raf = requestAnimationFrame(render);
     };
     raf = requestAnimationFrame(render);
 
-    return () => cancelAnimationFrame(raf);
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener("pointermove", onPointerMove);
+    };
   }, []);
 
   function submit(event: FormEvent<HTMLFormElement>) {
@@ -632,7 +777,14 @@ export function WebGLCinematic() {
             <form className="wc-final-search" onSubmit={submit}>
               <label htmlFor="wc-url">Bir siteyi şimdi tara</label>
               <div>
-                <input id="wc-url" value={url} onChange={(e) => setUrl(e.target.value)} placeholder="ornek-site.com" autoComplete="url" spellCheck={false} />
+                <input
+                  id="wc-url"
+                  value={url}
+                  onChange={(event) => setUrl(event.target.value)}
+                  placeholder="ornek-site.com"
+                  autoComplete="url"
+                  spellCheck={false}
+                />
                 <button type="submit">Analiz et ↗</button>
               </div>
               <small>DNS · TLS · HTTP · RDAP · HEADERS · HTML</small>
@@ -642,7 +794,7 @@ export function WebGLCinematic() {
           <div className="wc-depth" aria-label={`Sahne ${phase + 1} / ${phases.length}`}>
             {phases.map((item, i) => <i key={item.index} className={i <= phase ? "active" : ""} />)}
           </div>
-          <div className="wc-progress"><i style={{ transform: `scaleX(${progress})` }} /></div>
+          <div className="wc-progress"><i ref={progressRef} /></div>
         </div>
       </section>
 
@@ -652,6 +804,23 @@ export function WebGLCinematic() {
           <h2>Güven, tek bir yeşil tikten daha derin.</h2>
         </div>
         <p>Sonuçlarımız kesin güvenlik sertifikası değildir. Ölçülen teknik sinyalleri, veri kapsamını ve belirsizliği kullanıcıya açık biçimde gösterir.</p>
+      </section>
+
+      <section className="wc-stat-stage" aria-label="Kaynaklı güvenlik verileri">
+        <header>
+          <small>KAYNAKLI VERİ · 2025</small>
+          <h2>Risk soyut değil. Ölçülebilir.</h2>
+        </header>
+        <div className="wc-stat-grid">
+          {sourceStats.map((stat) => (
+            <article key={`${stat.sourceLabel}-${stat.label}`}>
+              <strong>{stat.value}</strong>
+              <h3>{stat.label}</h3>
+              <p>{stat.detail}</p>
+              <a href={stat.sourceUrl} target="_blank" rel="noreferrer">{stat.sourceLabel} ↗</a>
+            </article>
+          ))}
+        </div>
       </section>
     </main>
   );
