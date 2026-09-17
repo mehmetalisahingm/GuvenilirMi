@@ -7,7 +7,7 @@ import "./trust-playground.css";
 import "./real-laptop.css";
 import "./real-laptop-polish.css";
 import "./real-laptop-photo.css";
-import "./hero-product-v8.css";
+import "./v9-graphics.css";
 
 export const metadata: Metadata = {
   applicationName: "GüvenilirMi",
