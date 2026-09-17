@@ -1,11 +1,5 @@
-import { TrustPlayground } from "@/components/trust-playground";
-import { WebGLCinematic } from "@/components/webgl-cinematic";
+import { RealLaptopHome } from "@/components/real-laptop-home";
 
 export default function Home() {
-  return (
-    <>
-      <WebGLCinematic />
-      <TrustPlayground />
-    </>
-  );
+  return <RealLaptopHome />;
 }
