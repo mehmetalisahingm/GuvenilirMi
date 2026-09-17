@@ -1,11 +1,5 @@
-import { InteractiveStory } from "@/components/interactive-story";
-import { LiveScanDock } from "@/components/live-scan-dock";
+import { DeepCinematicStory } from "@/components/deep-cinematic-story";
 
 export default function Home() {
-  return (
-    <>
-      <InteractiveStory />
-      <LiveScanDock />
-    </>
-  );
+  return <DeepCinematicStory />;
 }
