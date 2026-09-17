@@ -5,6 +5,7 @@ import "./webgl-room.css";
 import "./webgl-stats.css";
 import "./trust-playground.css";
 import "./real-laptop.css";
+import "./real-laptop-polish.css";
 
 export const metadata: Metadata = {
   applicationName: "GüvenilirMi",
