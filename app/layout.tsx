@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import "./deep-cinematic.css";
+import "./webgl-cinematic.css";
 
 export const metadata: Metadata = {
   applicationName: "GüvenilirMi",
