@@ -1,5 +1,5 @@
-import { DeepCinematicStory } from "@/components/deep-cinematic-story";
+import { WebGLCinematic } from "@/components/webgl-cinematic";
 
 export default function Home() {
-  return <DeepCinematicStory />;
+  return <WebGLCinematic />;
 }
