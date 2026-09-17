@@ -7,14 +7,14 @@ import { sourceStats } from "@/lib/stats";
 import { TrustPlayground } from "@/components/trust-playground";
 
 const LAPTOP_PHOTO =
-  "https://images.unsplash.com/photo-1644792863360-40fa85ea52e7?auto=format&fit=crop&fm=jpg&ixlib=rb-4.1.0&q=88&w=3000";
+  "https://images.unsplash.com/photo-1776243365820-f64005e4a204?auto=format&fit=crop&fm=jpg&ixlib=rb-4.1.0&q=88&w=3000";
 
 const chapters = [
   {
     id: "01",
-    label: "İLK KONTROL",
-    title: "Bir siteye güvenmeden önce, kanıtına bak.",
-    body: "URL'yi gir. Teknik sinyalleri gör. Skorun neden oluştuğunu adım adım incele.",
+    label: "GERÇEK DÜNYA",
+    title: "Bir site, ilk bakışta normal görünür.",
+    body: "Görüntü güven kanıtı değildir. İçeri girelim.",
   },
   {
     id: "02",
@@ -133,34 +133,13 @@ export function RealLaptopHome() {
               style={{ "--photo": `url(${LAPTOP_PHOTO})` } as CSSProperties}
             />
             <div className="rl-photo-shade" />
-
-            <div className="rl-hero-demo">
-              <div className="rl-hero-demo-bar">
-                <div className="rl-hero-dots"><i /><i /><i /></div>
-                <div className="rl-hero-address"><span>⌕</span> guvenilirmi.com</div>
-                <div className="rl-hero-live"><i /> CANLI</div>
-              </div>
-              <div className="rl-hero-demo-body">
-                <div className="rl-hero-demo-glow" />
-                <div className="rl-hero-score">
-                  <small>TEKNİK GÜVEN SKORU</small>
-                  <strong>94</strong>
-                  <span>DÜŞÜK GÖZLEMLENEN RİSK</span>
-                </div>
-                <div className="rl-hero-signal-grid">
-                  <div><span>TLS</span><b>Doğrulandı</b><em>+8</em></div>
-                  <div><span>HEADERS</span><b>Güçlü</b><em>+7</em></div>
-                  <div><span>REDIRECT</span><b>Temiz</b><em>+5</em></div>
-                </div>
-                <div className="rl-hero-demo-foot">
-                  <span>DNS · TLS · HTTP · RDAP · HTML</span>
-                  <b>AI YOK · AÇIKLANABİLİR SKOR</b>
-                </div>
-              </div>
-            </div>
-
             <div className="rl-photo-label">
-              <i /> ÖLÇÜLEBİLİR SİNYALLER / AÇIKLANABİLİR SONUÇ
+              <i /> REAL DEVICE / REAL BROWSER / UNVERIFIED SITE
+            </div>
+            <div className="rl-photo-focus">
+              <span>URL</span>
+              <b>guvenilirmi.com</b>
+              <em>technical scan ready</em>
             </div>
           </div>
 
@@ -250,7 +229,7 @@ export function RealLaptopHome() {
           </div>
 
           <div className="rl-progress"><i /></div>
-          <div className="rl-scroll-cue"><span>↓</span> İÇERİ GİR</div>
+          <div className="rl-scroll-cue"><span>↓</span> SCROLL TO ENTER</div>
         </div>
       </section>
 
