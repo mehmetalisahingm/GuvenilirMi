@@ -2,9 +2,27 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "GüvenilirMi — Bir siteye güvenmeden önce bak",
+  applicationName: "GüvenilirMi",
+  title: {
+    default: "GüvenilirMi — Bir siteye güvenmeden önce bak",
+    template: "%s | GüvenilirMi",
+  },
   description:
-    "Web sitelerini AI kullanmadan, açıklanabilir teknik sinyallerle analiz eden güvenilirlik platformu.",
+    "Web sitelerini AI kullanmadan; DNS, domain, TLS, yönlendirme, güvenlik başlıkları ve sayfa davranışı gibi açıklanabilir teknik sinyallerle analiz et.",
+  keywords: [
+    "site güvenilir mi",
+    "web sitesi güvenlik kontrolü",
+    "site analiz",
+    "dolandırıcılık site kontrolü",
+    "domain güvenlik analizi",
+  ],
+  category: "technology",
+  creator: "GüvenilirMi",
+  manifest: "/manifest.webmanifest",
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
