@@ -31,6 +31,11 @@ export function normalizeInputUrl(input: string): URL {
     throw new ScannerInputError("Geçerli bir web sitesi adresi gir.", "INVALID_URL");
   }
 
+  const explicitScheme = trimmed.match(/^([a-z][a-z0-9+.-]*):\/\//i)?.[1]?.toLowerCase();
+  if (explicitScheme && explicitScheme !== "http" && explicitScheme !== "https") {
+    throw new ScannerInputError("Yalnızca HTTP ve HTTPS adresleri analiz edilebilir.", "INVALID_URL");
+  }
+
   const withProtocol = /^https?:\/\//i.test(trimmed) ? trimmed : `https://${trimmed}`;
 
   let url: URL;
