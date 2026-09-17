@@ -12,9 +12,9 @@ const LAPTOP_PHOTO =
 const chapters = [
   {
     id: "01",
-    label: "GERÇEK DÜNYA",
-    title: "Bir site, ilk bakışta normal görünür.",
-    body: "Görüntü güven kanıtı değildir. İçeri girelim.",
+    label: "İLK KONTROL",
+    title: "Bir siteye güvenmeden önce, kanıtına bak.",
+    body: "URL'yi gir. Teknik sinyalleri gör. Skorun neden oluştuğunu adım adım incele.",
   },
   {
     id: "02",
@@ -133,13 +133,34 @@ export function RealLaptopHome() {
               style={{ "--photo": `url(${LAPTOP_PHOTO})` } as CSSProperties}
             />
             <div className="rl-photo-shade" />
-            <div className="rl-photo-label">
-              <i /> REAL DEVICE / REAL BROWSER / UNVERIFIED SITE
+
+            <div className="rl-hero-demo">
+              <div className="rl-hero-demo-bar">
+                <div className="rl-hero-dots"><i /><i /><i /></div>
+                <div className="rl-hero-address"><span>⌕</span> guvenilirmi.com</div>
+                <div className="rl-hero-live"><i /> CANLI</div>
+              </div>
+              <div className="rl-hero-demo-body">
+                <div className="rl-hero-demo-glow" />
+                <div className="rl-hero-score">
+                  <small>TEKNİK GÜVEN SKORU</small>
+                  <strong>94</strong>
+                  <span>DÜŞÜK GÖZLEMLENEN RİSK</span>
+                </div>
+                <div className="rl-hero-signal-grid">
+                  <div><span>TLS</span><b>Doğrulandı</b><em>+8</em></div>
+                  <div><span>HEADERS</span><b>Güçlü</b><em>+7</em></div>
+                  <div><span>REDIRECT</span><b>Temiz</b><em>+5</em></div>
+                </div>
+                <div className="rl-hero-demo-foot">
+                  <span>DNS · TLS · HTTP · RDAP · HTML</span>
+                  <b>AI YOK · AÇIKLANABİLİR SKOR</b>
+                </div>
+              </div>
             </div>
-            <div className="rl-photo-focus">
-              <span>URL</span>
-              <b>guvenilirmi.com</b>
-              <em>technical scan ready</em>
+
+            <div className="rl-photo-label">
+              <i /> ÖLÇÜLEBİLİR SİNYALLER / AÇIKLANABİLİR SONUÇ
             </div>
           </div>
 
@@ -229,7 +250,7 @@ export function RealLaptopHome() {
           </div>
 
           <div className="rl-progress"><i /></div>
-          <div className="rl-scroll-cue"><span>↓</span> SCROLL TO ENTER</div>
+          <div className="rl-scroll-cue"><span>↓</span> İÇERİ GİR</div>
         </div>
       </section>
 
