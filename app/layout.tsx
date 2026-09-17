@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import "./premium-home.css";
 
 export const metadata: Metadata = {
   applicationName: "GüvenilirMi",
