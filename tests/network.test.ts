@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { isPublicIp, normalizeInputUrl, sameSiteHost } from "@/lib/scanner/network";
+import { isPublicIp, normalizeInputUrl, sameSiteHost } from "../lib/scanner/network";
 
 describe("scanner network guard", () => {
   it("normalizes a bare hostname to HTTPS", () => {
