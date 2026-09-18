@@ -210,7 +210,9 @@ export function HomeV18() {
   const deviceOpacity = useTransform(scrollYProgress, [0, .10, .20], [1, 1, 0]);
   const deviceScale = useTransform(scrollYProgress, [0, .10, .20], [1, 1.04, 1.12]);
   const browserOpacity = useTransform(scrollYProgress, [.08, .18, .46], [0, 1, 1]);
-  const browserScale = useTransform(scrollYProgress, [.08, .18, .32], [.36, .72, 1]);
+  const browserScale = useTransform(scrollYProgress, [.08, .18, .32], [.38, .74, 1]);
+  const browserY = useTransform(scrollYProgress, [.08, .18, .32], [36, 10, 0]);
+  const browserRotateX = useTransform(scrollYProgress, [.08, .18, .32], [1.8, .8, 0]);
   const xrayOpacity = useTransform(scrollYProgress, [.27, .38, .54], [0, 1, 1]);
   const breachOpacity = useTransform(scrollYProgress, [.47, .58, .73], [0, 1, 1]);
   const evidenceOpacity = useTransform(scrollYProgress, [.69, .79, .90], [0, 1, 1]);
@@ -281,7 +283,15 @@ export function HomeV18() {
             </div>
 
             <div className="gv-layer gv-browser-layer">
-              <motion.div className="gv-frame" style={prefersReducedMotion ? undefined : { opacity: browserOpacity, scale: browserScale }}>
+              <motion.div
+                className="gv-frame"
+                style={prefersReducedMotion ? undefined : {
+                  opacity: browserOpacity,
+                  scale: browserScale,
+                  y: browserY,
+                  rotateX: browserRotateX,
+                }}
+              >
                 <BrowserChrome><BookingSite mode="normal" /></BrowserChrome>
               </motion.div>
             </div>
