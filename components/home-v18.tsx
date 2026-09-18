@@ -153,13 +153,22 @@ function LaptopPhoto() {
         alt=""
       />
       <div className="gv-photo-caption"><span>LOCAL SESSION</span><b>09:41</b></div>
+      <div className="gv-device-chip gv-chip-tls"><small>TLS</small><b>VALID</b><span>+8</span></div>
+      <div className="gv-device-chip gv-chip-domain"><small>DOMAIN</small><b>1248 D</b><span>stable</span></div>
       <div className="gv-mini-window">
-        <div className="gv-mini-bar"><i /><i /><i /><span>aurelia-stays.example</span></div>
+        <div className="gv-mini-bar">
+          <i /><i /><i />
+          <span>aurelia-stays.example</span>
+          <b><i /> secure</b>
+        </div>
         <div className="gv-mini-site" style={{ backgroundImage: `url("${VILLA_IMAGE}")` }}>
+          <div className="gv-mini-overlay" />
           <b>AURELIA</b>
           <span>Somewhere slower.</span>
+          <small>PRIVATE STAY 07</small>
         </div>
       </div>
+      <div className="gv-cursor-hint">↖</div>
     </div>
   );
 }
@@ -201,7 +210,9 @@ export function HomeV18() {
   const deviceOpacity = useTransform(scrollYProgress, [0, .10, .20], [1, 1, 0]);
   const deviceScale = useTransform(scrollYProgress, [0, .10, .20], [1, 1.04, 1.12]);
   const browserOpacity = useTransform(scrollYProgress, [.08, .18, .46], [0, 1, 1]);
-  const browserScale = useTransform(scrollYProgress, [.08, .18, .32], [.36, .72, 1]);
+  const browserScale = useTransform(scrollYProgress, [.08, .18, .32], [.38, .74, 1]);
+  const browserY = useTransform(scrollYProgress, [.08, .18, .32], [36, 10, 0]);
+  const browserRotateX = useTransform(scrollYProgress, [.08, .18, .32], [1.8, .8, 0]);
   const xrayOpacity = useTransform(scrollYProgress, [.27, .38, .54], [0, 1, 1]);
   const breachOpacity = useTransform(scrollYProgress, [.47, .58, .73], [0, 1, 1]);
   const evidenceOpacity = useTransform(scrollYProgress, [.69, .79, .90], [0, 1, 1]);
@@ -242,6 +253,11 @@ export function HomeV18() {
               <input value={url} onChange={(event) => setUrl(event.target.value)} placeholder="ornek-site.com" />
               <button type="submit">Analiz et ↗</button>
             </form>
+            <div className="gv-intro-meta">
+              <span><i /> AI/LLM yok</span>
+              <span><i /> açıklanabilir skor</span>
+              <span><i /> kayıt gerekmez</span>
+            </div>
           </div>
 
           <AnimatePresence mode="wait">
@@ -267,7 +283,15 @@ export function HomeV18() {
             </div>
 
             <div className="gv-layer gv-browser-layer">
-              <motion.div className="gv-frame" style={prefersReducedMotion ? undefined : { opacity: browserOpacity, scale: browserScale }}>
+              <motion.div
+                className="gv-frame"
+                style={prefersReducedMotion ? undefined : {
+                  opacity: browserOpacity,
+                  scale: browserScale,
+                  y: browserY,
+                  rotateX: browserRotateX,
+                }}
+              >
                 <BrowserChrome><BookingSite mode="normal" /></BrowserChrome>
               </motion.div>
             </div>
@@ -307,6 +331,10 @@ export function HomeV18() {
                 <footer><span>AI yok</span><i /><span>hesap gerekmez</span><i /><span>açıklanabilir skor</span></footer>
               </motion.form>
             </div>
+          </div>
+
+          <div className="gv-scroll-cue">
+            <span>SCROLL TO ENTER</span><i>↓</i>
           </div>
 
           <div className="gv-stage-rail">
