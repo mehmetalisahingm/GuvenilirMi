@@ -1,5 +1,5 @@
-import { OryzoDepthCinematic } from "@/components/oryzo-depth-cinematic";
+import { BrowserBreachCinematic } from "@/components/browser-breach-cinematic";
 
 export default function Home() {
-  return <OryzoDepthCinematic />;
+  return <BrowserBreachCinematic />;
 }
