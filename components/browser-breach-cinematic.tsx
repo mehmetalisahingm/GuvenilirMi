@@ -226,13 +226,13 @@ export function BrowserBreachCinematic() {
     offset: ["start start", "end end"],
   });
 
-  const laptopScale = useTransform(scrollYProgress, [0, .10, .23], [.92, 1.08, 2.18]);
-  const laptopY = useTransform(scrollYProgress, [0, .17, .25], [10, -18, -105]);
-  const laptopOpacity = useTransform(scrollYProgress, [0, .22, .30], [1, 1, 0]);
-  const browserScale = useTransform(scrollYProgress, [.16, .29, .43], [.72, 1, 1.18]);
-  const browserOpacity = useTransform(scrollYProgress, [.14, .24, .43, .49], [0, 1, 1, 0]);
-  const breachOpacity = useTransform(scrollYProgress, [.38, .49, .70, .78], [0, 1, 1, 0]);
-  const breachScale = useTransform(scrollYProgress, [.38, .55, .72], [.84, 1, 1.06]);
+  const laptopScale = useTransform(scrollYProgress, [0, .11, .22, .30], [.78, .86, 1.05, 1.28]);
+  const laptopY = useTransform(scrollYProgress, [0, .16, .26, .31], [32, 10, -6, -26]);
+  const laptopOpacity = useTransform(scrollYProgress, [0, .24, .33], [1, 1, 0]);
+  const browserScale = useTransform(scrollYProgress, [.18, .30, .44], [.90, 1, 1.045]);
+  const browserOpacity = useTransform(scrollYProgress, [.16, .25, .44, .50], [0, 1, 1, 0]);
+  const breachOpacity = useTransform(scrollYProgress, [.40, .50, .71, .79], [0, 1, 1, 0]);
+  const breachScale = useTransform(scrollYProgress, [.40, .56, .72], [.94, 1, 1.018]);
   const evidenceOpacity = useTransform(scrollYProgress, [.67, .78, .90], [0, 1, 1]);
   const evidenceScale = useTransform(scrollYProgress, [.67, .81, .95], [.82, 1, 1.05]);
   const finalOpacity = useTransform(scrollYProgress, [.88, .96, 1], [0, 1, 1]);
