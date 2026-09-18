@@ -96,12 +96,18 @@ function MacBook({ compact = false }: { compact?: boolean }) {
           <div className="hw-terminal">
             <div className="hw-code-meta">GÜVENİRLİMİ / TRUST ENGINE</div>
             <div className="hw-command"><span>~</span> $ inspect --url guvenilirmi.com</div>
-            <div className="hw-bootline"><i /> loading deterministic checks</div>
+            <div className="hw-boot-seq">
+              <div className="hw-bootline"><i /> booting deterministic engine</div>
+              <div className="hw-bootline"><i /> dns resolver ............. ready</div>
+              <div className="hw-bootline"><i /> tls verifier .............. ready</div>
+              <div className="hw-bootline"><i /> http probe ................ ready</div>
+            </div>
             <div className="hw-hello">hello, world<span className="hw-cursor">_</span></div>
             <div className="hw-terminal-status">
               <span><i /> DNS ready</span>
-              <span><i /> TLS ready</span>
-              <span><i /> HTTP ready</span>
+              <span><i /> TLS verified</span>
+              <span><i /> HTTP reachable</span>
+              <span><i /> headers parsing</span>
             </div>
           </div>
           <div className="hw-screen-reflection" />
@@ -129,11 +135,11 @@ export function HelloWorldCinematic() {
     offset: ["start start", "end end"],
   });
 
-  const macScale = useTransform(scrollYProgress, [0, 0.12, 0.24, 0.34], [0.9, 1.04, 1.58, 2.45]);
-  const macY = useTransform(scrollYProgress, [0, 0.20, 0.34], [30, -10, -90]);
-  const macOpacity = useTransform(scrollYProgress, [0, 0.24, 0.35], [1, 1, 0]);
-  const browserScale = useTransform(scrollYProgress, [0.10, 0.24, 0.42], [0.68, 1, 1.42]);
-  const browserOpacity = useTransform(scrollYProgress, [0.11, 0.22, 0.39, 0.48], [0, 1, 1, 0]);
+  const macScale = useTransform(scrollYProgress, [0, 0.10, 0.20, 0.31], [0.92, 1.04, 1.43, 2.18]);
+  const macY = useTransform(scrollYProgress, [0, 0.18, 0.31], [30, -6, -82]);
+  const macOpacity = useTransform(scrollYProgress, [0, 0.23, 0.35], [1, 1, 0]);
+  const browserScale = useTransform(scrollYProgress, [0.13, 0.27, 0.42], [0.74, 1, 1.34]);
+  const browserOpacity = useTransform(scrollYProgress, [0.13, 0.24, 0.40, 0.49], [0, 1, 1, 0]);
   const engineScale = useTransform(scrollYProgress, [0.32, 0.49, 0.63], [0.72, 1, 1.3]);
   const engineOpacity = useTransform(scrollYProgress, [0.30, 0.40, 0.57, 0.66], [0, 1, 1, 0]);
   const riskOpacity = useTransform(scrollYProgress, [0.54, 0.63, 0.75, 0.81], [0, 1, 1, 0]);
@@ -172,7 +178,7 @@ export function HelloWorldCinematic() {
         <div className="hw-hero-copy">
           <p className="hw-kicker"><i /> URL'DEN DAHA DERİNE</p>
           <h1>Bir siteye<br />güvenmeden<br /><em>önce içine bak.</em></h1>
-          <p className="hw-lead">DNS'ten TLS'e, yönlendirmeden sayfa davranışına kadar teknik izi aç. Skoru değil, nedenini gör.</p>
+          <p className="hw-lead">Yüzeyde temiz görünen bir site güvenli olmayabilir. DNS'ten TLS'e, yönlendirmeden form davranışına kadar teknik izi aç; skoru değil, kanıtı gör.</p>
           <form className="hw-search" onSubmit={submitHero}>
             <span>https://</span>
             <input value={heroUrl} onChange={(event) => setHeroUrl(event.target.value)} placeholder="ornek-site.com" inputMode="url" />
