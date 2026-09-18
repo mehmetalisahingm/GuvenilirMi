@@ -1,16 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import "./webgl-cinematic.css";
-import "./webgl-room.css";
-import "./webgl-stats.css";
-import "./trust-playground.css";
-import "./real-laptop.css";
-import "./real-laptop-polish.css";
-import "./real-laptop-photo.css";
-import "./v9-graphics.css";
-import "./hello-world-cinematic.css";
-import "./oryzo-depth-v12.css";
-import "./browser-breach-v13.css";
+import "./home-v18.css";
 
 export const metadata: Metadata = {
   applicationName: "GüvenilirMi",

@@ -1,5 +1,5 @@
-import { BrowserBreachCinematic } from "@/components/browser-breach-cinematic";
+import { HomeV18 } from "@/components/home-v18";
 
 export default function Home() {
-  return <BrowserBreachCinematic />;
+  return <HomeV18 />;
 }
