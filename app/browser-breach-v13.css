@@ -1062,3 +1062,235 @@
   .bv-stage-4 .bv-evidence-panel{padding:28px 20px;min-height:auto}
   .bv-stage-5 .bv-live-card h3{font-size:56px}
 }
+
+
+/* V17 motion-safe centering */
+/*
+  Motion writes the transform property inline for scale/y.
+  All viewport centering below uses the independent CSS translate property
+  so animation can no longer destroy the camera composition.
+*/
+.bv-world-laptop,
+.bv-world-browser,
+.bv-breach-world,
+.bv-world-evidence,
+.bv-live-card{
+  right:auto !important;
+  margin:0;
+}
+
+.bv-stage-0 .bv-world-laptop{
+  left:50% !important;
+  top:50% !important;
+  translate:-50% -50%;
+  width:min(76vw,1380px) !important;
+  transform-origin:50% 44%;
+}
+.bv-stage-0 .bv-story-copy{
+  left:clamp(28px,4vw,76px) !important;
+  top:clamp(108px,13vh,144px) !important;
+  bottom:auto !important;
+  width:min(470px,34vw) !important;
+}
+.bv-stage-0 .bv-story-copy h2{
+  font-size:clamp(48px,4.9vw,82px) !important;
+}
+.bv-stage-0 .bv-story-copy>div>span{
+  max-width:400px;
+}
+
+/* Browser takeover: true viewport-centered frame */
+.bv-stage-1 .bv-world-browser{
+  left:50% !important;
+  top:53% !important;
+  translate:-50% -50%;
+  width:min(88vw,1580px) !important;
+  height:min(76vh,820px) !important;
+}
+.bv-stage-1 .bv-story-copy{
+  left:clamp(28px,4vw,74px) !important;
+  top:clamp(102px,12vh,136px) !important;
+  bottom:auto !important;
+  width:min(430px,31vw) !important;
+}
+.bv-stage-1 .bv-story-copy h2{
+  font-size:clamp(44px,4.5vw,74px) !important;
+}
+.bv-stage-1 .bv-world-browser:after{
+  background:
+    linear-gradient(90deg,rgba(7,8,11,.82) 0%,rgba(7,8,11,.44) 18%,rgba(7,8,11,.12) 32%,transparent 48%) !important;
+}
+
+/* X-ray: center the browser, keep copy contained in one corner */
+.bv-stage-2 .bv-world-browser{
+  left:50% !important;
+  top:52% !important;
+  translate:-50% -50%;
+  width:min(91vw,1640px) !important;
+  height:min(79vh,850px) !important;
+}
+.bv-stage-2 .bv-story-copy{
+  left:auto !important;
+  right:clamp(30px,4vw,74px) !important;
+  top:clamp(104px,12vh,138px) !important;
+  bottom:auto !important;
+  width:min(400px,29vw) !important;
+  text-align:right;
+}
+.bv-stage-2 .bv-story-copy h2{
+  font-size:clamp(42px,4.15vw,68px) !important;
+  line-height:.9;
+}
+.bv-stage-2 .bv-story-copy>div>span{
+  max-width:360px;
+  margin-left:auto;
+}
+.bv-stage-2 .bv-story-copy p{justify-content:flex-end}
+
+/* Breach: centered, one coherent stage */
+.bv-stage-3 .bv-breach-world{
+  left:50% !important;
+  top:52% !important;
+  translate:-50% -50%;
+  width:min(92vw,1660px) !important;
+  height:min(80vh,860px) !important;
+}
+.bv-stage-3 .bv-story-copy{
+  left:clamp(30px,4vw,76px) !important;
+  top:clamp(102px,12vh,138px) !important;
+  bottom:auto !important;
+  width:min(420px,30vw) !important;
+}
+.bv-stage-3 .bv-story-copy h2{
+  font-size:clamp(44px,4.35vw,72px) !important;
+}
+.bv-stage-3 .bv-story-copy>div>span{
+  max-width:380px;
+}
+
+/* Evidence and live cards were also being de-centered by Motion transforms */
+.bv-stage-4 .bv-world-evidence{
+  left:50% !important;
+  top:53% !important;
+  translate:-50% -50%;
+  width:min(72vw,1260px) !important;
+}
+.bv-stage-4 .bv-story-copy{
+  left:clamp(30px,4vw,76px) !important;
+  top:clamp(102px,12vh,138px) !important;
+  bottom:auto !important;
+  width:min(390px,28vw) !important;
+}
+.bv-stage-4 .bv-story-copy h2{
+  font-size:clamp(42px,4vw,68px) !important;
+}
+.bv-stage-5 .bv-live-card{
+  left:50% !important;
+  top:50% !important;
+  translate:-50% -50%;
+  width:min(68vw,1120px) !important;
+}
+
+/* Keep the premium page visually large inside the browser */
+.bv-lux-hero{
+  height:calc(100% - 150px) !important;
+  min-height:0 !important;
+  padding:24px 46px 14px !important;
+}
+.bv-lux-copy h3{
+  font-size:clamp(42px,4vw,66px) !important;
+}
+.bv-watch-stage{
+  min-height:300px !important;
+}
+.bv-watch-halo{
+  width:min(28vw,360px) !important;
+  height:min(28vw,360px) !important;
+}
+.bv-watch{
+  width:min(21vw,270px) !important;
+}
+.bv-lux-strip{
+  height:82px !important;
+}
+.bv-checkout-card{
+  width:182px !important;
+  right:22px !important;
+  bottom:18px !important;
+}
+
+/* Stronger but quieter scene background */
+.bv-sticky{
+  background:#08090d;
+}
+.bv-sticky:after{
+  pointer-events:none;
+  background:
+    radial-gradient(circle at 50% 52%,transparent 0 48%,rgba(3,4,7,.16) 76%,rgba(3,4,7,.32) 100%) !important;
+}
+.bv-story-grid{
+  opacity:.10 !important;
+}
+.bv-stage-3 .bv-story-grid{opacity:.04 !important}
+
+/* Do not let editorial copy cover half the actual product */
+.bv-story-copy{
+  z-index:38 !important;
+  pointer-events:none;
+}
+.bv-story-copy>div:first-child{
+  max-width:100% !important;
+}
+.bv-story-copy p{
+  font-size:7px;
+}
+.bv-story-copy>div>span{
+  font-size:12px;
+  line-height:1.55;
+}
+
+/* Mobile/tablet: use translate independently from Motion transforms here too */
+@media(max-width:900px){
+  .bv-stage-0 .bv-world-laptop{
+    left:50% !important;
+    top:34% !important;
+    translate:-50% -50%;
+    width:94vw !important;
+  }
+  .bv-stage-1 .bv-world-browser,
+  .bv-stage-2 .bv-world-browser,
+  .bv-stage-3 .bv-breach-world{
+    left:50% !important;
+    top:36% !important;
+    translate:-50% -50%;
+    width:96vw !important;
+    height:58vh !important;
+  }
+  .bv-stage-4 .bv-world-evidence{
+    left:50% !important;
+    top:34% !important;
+    translate:-50% -50%;
+    width:94vw !important;
+  }
+  .bv-stage-5 .bv-live-card{
+    left:50% !important;
+    top:45% !important;
+    translate:-50% -50%;
+    width:94vw !important;
+  }
+  .bv-story-copy,
+  .bv-stage-0 .bv-story-copy,
+  .bv-stage-1 .bv-story-copy,
+  .bv-stage-2 .bv-story-copy,
+  .bv-stage-3 .bv-story-copy,
+  .bv-stage-4 .bv-story-copy{
+    left:18px !important;
+    right:18px !important;
+    top:auto !important;
+    bottom:18px !important;
+    width:auto !important;
+    text-align:left !important;
+  }
+  .bv-stage-2 .bv-story-copy p{justify-content:flex-start}
+  .bv-stage-2 .bv-story-copy>div>span{margin-left:0}
+}
