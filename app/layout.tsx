@@ -9,6 +9,7 @@ import "./real-laptop-polish.css";
 import "./real-laptop-photo.css";
 import "./v9-graphics.css";
 import "./hello-world-cinematic.css";
+import "./oryzo-depth-v12.css";
 
 export const metadata: Metadata = {
   applicationName: "GüvenilirMi",
