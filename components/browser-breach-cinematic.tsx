@@ -66,41 +66,76 @@ function FakeShop({ story = false }: { story?: boolean }) {
   return (
     <div className={story ? "bv-shop bv-shop-story" : "bv-shop"}>
       <header className="bv-shop-nav">
-        <strong>NOVA</strong>
-        <nav><span>Yeni</span><span>Giyim</span><span>Teknoloji</span></nav>
-        <div><i>⌕</i><i>♡</i><b>2</b></div>
+        <strong>NOCTRA</strong>
+        <nav><span>Objects</span><span>Archive</span><span>Journal</span></nav>
+        <div><i>Search</i><i>Bag 01</i></div>
       </header>
 
-      <div className="bv-shop-hero">
-        <div className="bv-shop-copy">
-          <small>YENİ SEZON / %40'A VARAN</small>
-          <h3>Geceye<br />hazır.</h3>
-          <p>Minimal tasarım. Hızlı teslimat. Güvenli ödeme.</p>
-          <button type="button">Koleksiyonu keşfet</button>
-        </div>
-        <div className="bv-product-stage" aria-hidden="true">
-          <div className="bv-product-orb" />
-          <div className="bv-shoe">
-            <i className="sole" />
-            <i className="body" />
-            <i className="heel" />
-            <i className="lace l1" /><i className="lace l2" /><i className="lace l3" />
+      <div className="bv-lux-hero">
+        <div className="bv-lux-copy">
+          <small>OBJECT 01 / LIMITED EDITION</small>
+          <h3>Time,<br />reframed.</h3>
+          <p>A sculptural timepiece built from brushed titanium, sapphire glass and obsessive restraint.</p>
+          <div className="bv-lux-actions">
+            <button type="button">Explore Object 01</button>
+            <span>₺18.900</span>
           </div>
-          <span>01 / NIGHT RUNNER</span>
+        </div>
+
+        <div className="bv-watch-stage" aria-hidden="true">
+          <div className="bv-watch-halo" />
+          <svg className="bv-watch" viewBox="0 0 480 520">
+            <defs>
+              <linearGradient id="strap" x1="0" x2="1">
+                <stop offset="0" stopColor="#1b1d21" />
+                <stop offset=".5" stopColor="#555b62" />
+                <stop offset="1" stopColor="#15171a" />
+              </linearGradient>
+              <linearGradient id="metal" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stopColor="#e7eaee" />
+                <stop offset=".32" stopColor="#838992" />
+                <stop offset=".62" stopColor="#f7f8f9" />
+                <stop offset="1" stopColor="#656b72" />
+              </linearGradient>
+              <radialGradient id="dial">
+                <stop offset="0" stopColor="#262a30" />
+                <stop offset=".7" stopColor="#090a0d" />
+                <stop offset="1" stopColor="#020304" />
+              </radialGradient>
+              <filter id="soft">
+                <feGaussianBlur stdDeviation="10" />
+              </filter>
+            </defs>
+            <ellipse cx="245" cy="446" rx="132" ry="26" fill="rgba(23,18,30,.22)" filter="url(#soft)" />
+            <rect x="192" y="14" width="106" height="190" rx="48" fill="url(#strap)" />
+            <rect x="192" y="318" width="106" height="188" rx="48" fill="url(#strap)" />
+            <rect x="154" y="150" width="182" height="222" rx="58" fill="url(#metal)" />
+            <rect x="166" y="162" width="158" height="198" rx="49" fill="#14171b" />
+            <ellipse cx="245" cy="261" rx="71" ry="89" fill="url(#dial)" stroke="#717780" strokeWidth="2" />
+            <circle cx="245" cy="261" r="55" fill="none" stroke="#2b3036" strokeWidth="1" />
+            <line x1="245" y1="261" x2="245" y2="213" stroke="#eef0f2" strokeWidth="5" strokeLinecap="round" />
+            <line x1="245" y1="261" x2="286" y2="281" stroke="#c8ccd0" strokeWidth="4" strokeLinecap="round" />
+            <circle cx="245" cy="261" r="6" fill="#f5f6f7" />
+            <rect x="338" y="222" width="15" height="78" rx="7" fill="#7b8188" />
+            <path d="M177 177 C216 153 289 150 315 187" fill="none" stroke="rgba(255,255,255,.42)" strokeWidth="5" />
+          </svg>
+          <div className="bv-watch-spec left"><small>CASE</small><b>42 mm</b></div>
+          <div className="bv-watch-spec right"><small>MATERIAL</small><b>Titanium</b></div>
+          <span className="bv-object-id">NOCTRA / O1 — 2026</span>
         </div>
       </div>
 
-      <div className="bv-products">
-        <article><div className="thumb violet" /><span>Night Runner</span><b>₺3.499</b></article>
-        <article><div className="thumb sand" /><span>Mono Bag</span><b>₺1.249</b></article>
-        <article><div className="thumb cyan" /><span>Arc Headset</span><b>₺2.899</b></article>
+      <div className="bv-lux-strip">
+        <article><small>01</small><b>Sapphire crystal</b><span>Scratch resistant</span></article>
+        <article><small>02</small><b>Automatic movement</b><span>72 h reserve</span></article>
+        <article><small>03</small><b>Water resistance</b><span>10 ATM</span></article>
       </div>
 
       <div className="bv-checkout-card">
-        <small>HIZLI ÖDEME</small>
-        <strong>Sepeti tamamla</strong>
+        <small>QUICK RESERVE</small>
+        <strong>Object 01</strong>
         <div><span>•••• •••• •••• 4812</span><em>09/28</em></div>
-        <button type="button">₺4.748 öde</button>
+        <button type="button">Reserve — ₺18.900</button>
       </div>
 
       {story && (
@@ -131,12 +166,12 @@ function BrowserWindow({ story = false }: { story?: boolean }) {
     <div className={story ? "bv-browser bv-browser-story" : "bv-browser"}>
       <div className="bv-browser-top">
         <div className="bv-dots"><i /><i /><i /></div>
-        <div className="bv-tab"><span>◈</span><b>NOVA Store</b><i>×</i></div>
+        <div className="bv-tab"><span>◈</span><b>NOCTRA / Object 01</b><i>×</i></div>
         <button type="button">+</button>
       </div>
       <div className="bv-address">
         <div className="bv-controls"><span>‹</span><span>›</span><span>↻</span></div>
-        <div className="bv-url"><i>⌁</i><span>https://nova-store.example</span><b>•••</b></div>
+        <div className="bv-url"><i>⌁</i><span>https://noctra-atelier.example</span><b>•••</b></div>
         <div className="bv-browser-actions"><span>☆</span><span>⌘</span></div>
       </div>
       <div className="bv-browser-page">
