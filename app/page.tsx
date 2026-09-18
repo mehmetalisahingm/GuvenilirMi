@@ -1,5 +1,5 @@
-import { HelloWorldCinematic } from "@/components/hello-world-cinematic";
+import { OryzoDepthCinematic } from "@/components/oryzo-depth-cinematic";
 
 export default function Home() {
-  return <HelloWorldCinematic />;
+  return <OryzoDepthCinematic />;
 }
